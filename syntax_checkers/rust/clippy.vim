@@ -24,10 +24,6 @@ else
 endif
 
 function! SyntaxCheckers_rust_clippy_GetLocList() dict
-	let makeprg = self.makeprgBuild({
-				\ 'args': 'clippy -q',
-				\ 'fname': '' })
-
 	let errorformat  =
 				\ '%E%f:%l:%c: %\d%#:%\d%# %.%\{-}error:%.%\{-} %m,'   .
 				\ '%W%f:%l:%c: %\d%#:%\d%# %.%\{-}warning:%.%\{-} %m,' .
@@ -47,7 +43,7 @@ function! SyntaxCheckers_rust_clippy_GetLocList() dict
         \ '%C %#--> %f:%l:%c'
 
     let loclist = SyntasticMake({
-				\ 'makeprg': makeprg,
+				\ 'makeprg': self.makeprgBuild({}),
 				\ 'errorformat': errorformat })
 
     let issues = filter(loclist, '!empty(v:val["text"])')
@@ -60,7 +56,7 @@ endfunction
 call g:SyntasticRegistry.CreateAndRegisterChecker({
 			\ 'filetype': 'rust',
 			\ 'name': 'clippy',
-            \ 'exec': 'cargo'})
+            \ 'exec': 'clippy-driver'})
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
